@@ -4,22 +4,20 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
-public abstract class Reporte {
+import dan.tp2021.reportes.domain.items.Item;
+import dan.tp2021.reportes.domain.items.ItemCliente;
 
-    private Integer id;
-    private LocalDate fechaInicio;
-    private LocalDate fechaFin;
-    private Instant generado;
+public abstract class Reporte<I extends Item> {
+
+    protected Integer id;
+    protected LocalDate fechaInicio;
+    protected LocalDate fechaFin;
+    protected Instant generado;
+    protected List<I> items;
 
     public Reporte() {
     }
 
-    public Reporte(Integer id, LocalDate fechaInicio, LocalDate fechaFin, Instant generado) {
-        this.id = id;
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
-        this.generado = generado;
-    }
 
     public Integer getId() {
         return id;
@@ -29,7 +27,13 @@ public abstract class Reporte {
         this.id = id;
     }
 
-    public abstract List getItems();
+    public List<I> getItems(){
+        return items;
+    }
+
+    public void setItems(List<I> items) {
+        this.items = items;
+    }
 
     public LocalDate getFechaInicio() {
         return fechaInicio;

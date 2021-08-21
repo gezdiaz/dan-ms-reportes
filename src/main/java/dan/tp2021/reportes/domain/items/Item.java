@@ -2,7 +2,7 @@ package dan.tp2021.reportes.domain.items;
 
 public abstract class Item {
 
-    private Integer id;
+    protected Integer id;
 
     public Item() {
     }
