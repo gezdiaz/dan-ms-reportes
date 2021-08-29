@@ -4,13 +4,13 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
-import dan.tp2021.reportes.domain.reportes.ReportePedidos;
+import dan.tp2021.reportes.domain.reportes.ReportePedido;
 
 @Service
 public class ReportePedidoServiceImpl implements ReportePedidoService{
 
     @Override
-    public ReportePedidos generarReporte(LocalDate fechaInicio, LocalDate fechaFin) {
+    public ReportePedido generarReporte(LocalDate fechaInicio, LocalDate fechaFin) {
         return null;
     }
 }

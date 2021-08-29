@@ -1,5 +1,8 @@
 package dan.tp2021.reportes.domain.items;
 
+import javax.persistence.Entity;
+
+@Entity
 public class ItemMaterial extends Item{
 
     //Representa un material, pero tiene más datos para el reporte

@@ -2,6 +2,9 @@ package dan.tp2021.reportes.domain.items;
 
 import java.time.Instant;
 
+import javax.persistence.Entity;
+
+@Entity
 public class ItemPedido extends Item{
 
     private Double ingresosGenerados;

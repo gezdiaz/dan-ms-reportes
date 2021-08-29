@@ -2,10 +2,10 @@ package dan.tp2021.reportes.service;
 
 import java.time.LocalDate;
 
-import dan.tp2021.reportes.domain.reportes.ReporteMateriales;
+import dan.tp2021.reportes.domain.reportes.ReporteMaterial;
 
 public interface ReporteMaterialService {
 
-    ReporteMateriales generarReporte(LocalDate fechaInicio, LocalDate fechaFin);
+    ReporteMaterial generarReporte(LocalDate fechaInicio, LocalDate fechaFin);
 
 }
