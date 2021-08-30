@@ -2,7 +2,7 @@ package dan.tp2021.reportes.service;
 
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 import dan.tp2021.reportes.domain.reportes.ReportePedido;
 
@@ -10,7 +10,7 @@ import dan.tp2021.reportes.domain.reportes.ReportePedido;
 public class ReportePedidoServiceImpl implements ReportePedidoService{
 
     @Override
-    public ReportePedido generarReporte(LocalDate fechaInicio, LocalDate fechaFin) {
+    public ReportePedido generarReporte(Instant fechaInicio, Instant fechaFin) {
         return null;
     }
 }

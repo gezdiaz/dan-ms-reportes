@@ -1,5 +1,8 @@
 package dan.tp2021.reportes.dto;
 
+import org.hibernate.validator.internal.util.privilegedactions.LoadClass;
+
+import java.time.Instant;
 import java.time.LocalDate;
 
 import dan.tp2021.reportes.domain.reportes.TipoReporte;

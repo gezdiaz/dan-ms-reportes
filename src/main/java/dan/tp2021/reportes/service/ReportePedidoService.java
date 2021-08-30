@@ -1,10 +1,10 @@
 package dan.tp2021.reportes.service;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 import dan.tp2021.reportes.domain.reportes.ReportePedido;
 
 public interface ReportePedidoService {
 
-    ReportePedido generarReporte(LocalDate fechaInicio, LocalDate fechaFin);
+    ReportePedido generarReporte(Instant fechaInicio, Instant fechaFin);
 }

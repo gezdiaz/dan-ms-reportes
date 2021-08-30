@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.List;
-
-import javax.persistence.GeneratedValue;
+import java.util.TimeZone;
 
 import dan.tp2021.reportes.domain.exceptions.ReporteNotFoundException;
 import dan.tp2021.reportes.domain.reportes.ReporteCliente;
@@ -47,10 +47,10 @@ public class ReporteRest {
     @PostMapping("/clientes")
     public ResponseEntity<ReporteCliente> generarReporteCliente(@RequestBody ReporteDTO datosReporte){
 
-        LocalDate fechaInicio = datosReporte.fechaInicio;
-        LocalDate fechaFin = datosReporte.fechaFin;
+        Instant fechaInicio = datosReporte.fechaInicio.atStartOfDay().toInstant(ZoneOffset.ofTotalSeconds(TimeZone.getDefault().getRawOffset()/1000));
+        Instant fechaFin = datosReporte.fechaFin.atTime(23,59,59).toInstant(ZoneOffset.ofTotalSeconds(TimeZone.getDefault().getRawOffset()/1000));
 
-        if(fechaFin == null || fechaInicio == null || fechaFin.toEpochDay() < fechaInicio.toEpochDay()){
+        if(fechaFin == null || fechaInicio == null || fechaFin.isBefore(fechaInicio)){
             //las fechas no son válidas
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Las fechas no son válidas");
         }
@@ -96,10 +96,10 @@ public class ReporteRest {
     @PostMapping("/materiales")
     public ResponseEntity<ReporteMaterial> generarReporteMaterial(@RequestBody ReporteDTO datosReporte){
 
-        LocalDate fechaInicio = datosReporte.fechaInicio;
-        LocalDate fechaFin = datosReporte.fechaFin;
+        Instant fechaInicio = datosReporte.fechaInicio.atStartOfDay().toInstant(ZoneOffset.ofTotalSeconds(TimeZone.getDefault().getRawOffset()/1000));
+        Instant fechaFin = datosReporte.fechaFin.atTime(23,59,59).toInstant(ZoneOffset.ofTotalSeconds(TimeZone.getDefault().getRawOffset()/1000));
 
-        if(fechaFin == null || fechaInicio == null || fechaFin.toEpochDay() < fechaInicio.toEpochDay()){
+        if(fechaFin == null || fechaInicio == null || fechaFin.isBefore(fechaInicio)){
             //las fechas no son válidas
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Las fechas no son válidas");
         }
@@ -119,10 +119,10 @@ public class ReporteRest {
     @PostMapping("/pedidos")
     public ResponseEntity<ReportePedido> generarReportePedidos(@RequestBody ReporteDTO datosReporte){
 
-        LocalDate fechaInicio = datosReporte.fechaInicio;
-        LocalDate fechaFin = datosReporte.fechaFin;
+        Instant fechaInicio = datosReporte.fechaInicio.atStartOfDay().toInstant(ZoneOffset.ofTotalSeconds(TimeZone.getDefault().getRawOffset()/1000));
+        Instant fechaFin = datosReporte.fechaFin.atTime(23,59,59).toInstant(ZoneOffset.ofTotalSeconds(TimeZone.getDefault().getRawOffset()/1000));
 
-        if(fechaFin == null || fechaInicio == null || fechaFin.toEpochDay() < fechaInicio.toEpochDay()){
+        if(fechaFin == null || fechaInicio == null || fechaFin.isBefore(fechaInicio)){
             //las fechas no son válidas
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Las fechas no son válidas");
         }
