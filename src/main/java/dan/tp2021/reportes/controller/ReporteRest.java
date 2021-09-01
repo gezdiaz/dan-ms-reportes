@@ -87,7 +87,7 @@ public class ReporteRest {
         try {
             reportes = reporteClienteService.getAllReportes();
         } catch (Exception e) {
-            logger.error("getReporteClienteById: Se produjo un error al obtener todos los reportes: " + e.getMessage(), e);
+            logger.error("getAllReporteCliente: Se produjo un error al obtener todos los reportes: " + e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Se produjo un error al obtener todos los reportes: " + e.getMessage(), e);
         }
         return ResponseEntity.ok(reportes);
@@ -109,11 +109,38 @@ public class ReporteRest {
         try {
             reporte = reporteMaterialService.generarReporte(fechaInicio, fechaFin);
         } catch (Exception e) {
-            logger.error("generarReporteCliente: Se produjo un error al generar un reporte de materiales: " + e.getMessage(), e);
+            logger.error("generarReporteMaterial: Se produjo un error al generar un reporte de materiales: " + e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Se produjo un error al generar el reporte: " + e.getMessage(), e);
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(reporte);
+    }
+
+    @GetMapping("/materiales/{id}")
+    public ResponseEntity<ReporteMaterial> getReporteMaterialById(@PathVariable("id") Integer id){
+
+        try {
+            ReporteMaterial reporteMaterial = reporteMaterialService.getReporteById(id);
+            return ResponseEntity.ok(reporteMaterial);
+        } catch (ReporteNotFoundException rnfe){
+            logger.warn("getReporteMaterialById: No se encontró el reporte de materiales con id: " + id + ". Mensaje: " + rnfe.getMessage(), rnfe);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontró el reporte de materiales con id: " + id + ". Mensaje: " + rnfe.getMessage(), rnfe);
+        } catch (Exception e) {
+            logger.error("getReporteMaterialById: Se produjo un error al obtener el reporte de materiales con id " + id + ": " + e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Se produjo un error al obtener el reporte: " + e.getMessage(), e);
+        }
+    }
+
+    @GetMapping("/materiales")
+    public ResponseEntity<List<ReporteMaterial>> getAllReporteMaterial(){
+
+        try {
+            List<ReporteMaterial> reportesMaterial = reporteMaterialService.getAllReportes();
+            return ResponseEntity.ok(reportesMaterial);
+        } catch (Exception e) {
+            logger.error("getAllReporteMaterial: Se produjo un error al obtener la lista de reportes de materiales: " + e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Se produjo un error al obtener los reportes: " + e.getMessage(), e);
+        }
     }
 
     @PostMapping("/pedidos")
@@ -138,6 +165,33 @@ public class ReporteRest {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(reporte);
 
+    }
+
+    @GetMapping("/pedidos/{id}")
+    public ResponseEntity<ReportePedido> getReportePedidoById(@PathVariable("id") Integer id){
+
+        try {
+            ReportePedido reportePedido = reportePedidoService.getReporteById(id);
+            return ResponseEntity.ok(reportePedido);
+        } catch (ReporteNotFoundException rnfe){
+            logger.warn("getReporteClienteById: No se encontró el reporte de pedidos con id: " + id + ". Mensaje: " + rnfe.getMessage(), rnfe);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "getReportePedidoById: No se encontró el reporte de pedidos con id: " + id + ". Mensaje: " + rnfe.getMessage(), rnfe);
+        } catch (Exception e) {
+            logger.error("getReportePedidoById: Se produjo un error al obtener el reporte de pedidos con id " + id + ": " + e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Se produjo un error al obtener el reporte: " + e.getMessage(), e);
+        }
+    }
+
+    @GetMapping("/pedidos")
+    public ResponseEntity<List<ReportePedido>> getAllReportePedido(){
+
+        try {
+            List<ReportePedido> reportesPedidos = reportePedidoService.getAllReportes();
+            return ResponseEntity.ok(reportesPedidos);
+        } catch (Exception e) {
+            logger.error("getAllReportePedido: Se produjo un error al obtener la lista de reportes de pedidos: " + e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Se produjo un error al obtener los reportes: " + e.getMessage(), e);
+        }
     }
 
 
