@@ -11,8 +11,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import ch.qos.logback.core.net.server.Client;
 import dan.tp2021.reportes.dao.ItemClienteRepository;
 import dan.tp2021.reportes.dao.ReporteClienteRepository;
+import dan.tp2021.reportes.dao.external.ClienteRepository;
 import dan.tp2021.reportes.dao.external.PedidoRepository;
 import dan.tp2021.reportes.domain.exceptions.ReporteNotFoundException;
 import dan.tp2021.reportes.domain.external.cliente.Cliente;
@@ -32,10 +34,13 @@ public class ReporteClienteServiceImpl implements ReporteClienteService {
 
     private final PedidoRepository pedidoRepository;
 
-    public ReporteClienteServiceImpl(ReporteClienteRepository reporteClienteRepository, ItemClienteRepository itemClienteRepository, PedidoRepository pedidoRepository) {
+    private final ClienteRepository clienteRepository;
+
+    public ReporteClienteServiceImpl(ReporteClienteRepository reporteClienteRepository, ItemClienteRepository itemClienteRepository, PedidoRepository pedidoRepository, ClienteRepository clienteRepository) {
         this.reporteClienteRepository = reporteClienteRepository;
         this.itemClienteRepository = itemClienteRepository;
         this.pedidoRepository = pedidoRepository;
+        this.clienteRepository = clienteRepository;
     }
 
     @Override
@@ -47,31 +52,24 @@ public class ReporteClienteServiceImpl implements ReporteClienteService {
         List<ItemCliente> itemsCliente = this.getItemsCliente(fechaInicio, fechaFin);
 
         ReporteCliente reporteCliente = new ReporteCliente();
-//        reporteCliente.setFechaInicio(LocalDate.of(2021, 8, 1));
-//        reporteCliente.setFechaFin(LocalDate.of(2021, 8, 10));
-//
-//        List<ItemCliente> items = new ArrayList<>();
-//        Double ingresos = 0.0;
-//        for (int i = 1; i < 10; i++) {
-//            ItemCliente item = new ItemCliente();
-//            item.setIdCliente(i);
-//            item.setCantidadObras(i * 2);
-//            item.setMail("cliente" + i + "@email.com");
-//            item.setGananciasGeneradas(150.50 * i);
-//            item.setCuit(((i * 165) / 24) * 354 + "");
-//            item.setRazonSocial("Razón social cliente " + i);
-//            items.add(item);
-//            ingresos += item.getGananciasGeneradas();
-//        }
-//        reporteCliente.setItems(items);
-//        reporteCliente.setCantidadClientes(items.size());
-//        reporteCliente.setIngresosTotales(ingresos);
-//
-//        logger.debug("generarReporte: reporte generado a para guardar: " + reporteCliente);
-//
-//        reporteCliente = reporteClienteRepository.save(reporteCliente);
-//
-//        logger.debug("generarReporte: reporte después de guardado: " + reporteCliente);
+        reporteCliente.setGenerado(Instant.now());
+        reporteCliente.setFechaInicio(fechaInicio);
+        reporteCliente.setFechaFin(fechaFin);
+
+        reporteCliente.setItems(itemsCliente);
+        reporteCliente.setCantidadClientes(itemsCliente.size());
+
+        Double ingresosTotales = 0.0;
+        for (ItemCliente cliente: itemsCliente){
+            ingresosTotales += cliente.getGananciasGeneradas();
+        }
+        reporteCliente.setIngresosTotales(ingresosTotales);
+
+        logger.debug("generarReporte: reporte generado a para guardar: " + reporteCliente);
+
+        reporteCliente = reporteClienteRepository.save(reporteCliente);
+
+        logger.debug("generarReporte: reporte después de guardado: " + reporteCliente);
 
         return reporteCliente;
     }
@@ -89,25 +87,36 @@ public class ReporteClienteServiceImpl implements ReporteClienteService {
 
         for (Pedido p : pedidos) {
             Obra obra = p.getObra();
-            Cliente cliente = obra.getCliente();
-            if (!clientesAgregados.contains(cliente.getId())) {
+            Integer clienteId = obra.getCliente().getId();
+            if (!clientesAgregados.contains(clienteId)) {
                 //agregar el cliente solo si no está agregado ya
+                Cliente cliente = clienteRepository.findById(clienteId).get();
+                logger.debug("getItemsCliente: Procesando cliente: " + cliente);
                 ItemCliente itemCliente = new ItemCliente();
                 itemCliente.setIdCliente(cliente.getId());
                 itemCliente.setCuit(cliente.getCuit());
                 itemCliente.setMail(cliente.getMail());
+                itemCliente.setRazonSocial(cliente.getRazonSocial());
                 itemCliente.setCantidadObras(cliente.getObras().size());
                 itemsClientes.add(itemCliente);
                 clientesAgregados.add(cliente.getId());
             }
         }
 
-        logger.debug("getItemsCliente: Items clientes creados: " + itemsClientes);
+        logger.debug("getItemsCliente: items despues del primer for: " + itemsClientes);
 
         for (ItemCliente itemCliente : itemsClientes){
             List<Pedido> pedidosCliente = pedidoRepository.findByFechaPedidoBetweenAndClienteId(fechaInicio, fechaFin, itemCliente.getIdCliente());
             logger.debug("getItemsCliente: pedidos para el cliente con id " + itemCliente.getIdCliente() + ": " + pedidosCliente);
+            Double gananciasGeneradas = 0.0;
+            for (Pedido pedido: pedidosCliente){
+                gananciasGeneradas += pedido.getIngresos();
+            }
+            itemCliente.setGananciasGeneradas(gananciasGeneradas);
+            itemCliente.setCantidadPedidos(pedidosCliente.size());
         }
+
+        logger.debug("getItemsCliente: Items clientes creados: " + itemsClientes);
 
         return itemsClientes;
     }

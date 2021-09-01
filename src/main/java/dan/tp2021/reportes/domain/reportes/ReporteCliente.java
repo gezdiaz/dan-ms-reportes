@@ -1,7 +1,6 @@
 package dan.tp2021.reportes.domain.reportes;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -9,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
-import dan.tp2021.reportes.domain.items.Item;
 import dan.tp2021.reportes.domain.items.ItemCliente;
 
 @Entity
@@ -26,7 +24,7 @@ public class ReporteCliente extends Reporte{
     public ReporteCliente() {
     }
 
-    public ReporteCliente(Integer id, LocalDate fechaInicio, LocalDate fechaFin, Instant generado, List<ItemCliente> items) {
+    public ReporteCliente(Integer id, Instant fechaInicio, Instant fechaFin, Instant generado, List<ItemCliente> items) {
         this.id = id;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;

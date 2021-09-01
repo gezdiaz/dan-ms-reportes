@@ -8,6 +8,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -26,6 +27,7 @@ public class Cliente {
     private String mail;
 
     @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cliente_id")
     private List<Obra> obras;
 
     public Integer getId() {
@@ -66,5 +68,16 @@ public class Cliente {
 
     public void setObras(List<Obra> obras) {
         this.obras = obras;
+    }
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "id=" + id +
+                ", razonSocial='" + razonSocial + '\'' +
+                ", cuit='" + cuit + '\'' +
+                ", mail='" + mail + '\'' +
+                ", obras=" + obras +
+                '}';
     }
 }

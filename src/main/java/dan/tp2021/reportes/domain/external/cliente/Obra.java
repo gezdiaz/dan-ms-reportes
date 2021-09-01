@@ -24,7 +24,7 @@ public class Obra {
     private Integer superficie;
     @ManyToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE}) //No hay obras sin tipo TODO ver si hacemos que se cree el tipo junto con la obra o aparte, o ambos.
     private TipoObra tipo;
-    @ManyToOne(optional = false, cascade = CascadeType.PERSIST) //El cliente se tiene que crear entes que las obras, no puede haber obras sin cliente
+    @ManyToOne(optional = false, cascade = CascadeType.PERSIST) //El cliente se tiene que crear antes que las obras, no puede haber obras sin cliente
     private Cliente cliente;
 
     public Integer getId() {
@@ -73,5 +73,17 @@ public class Obra {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    @Override
+    public String toString() {
+        return "Obra{" +
+                "id=" + id +
+                ", descripcion='" + descripcion + '\'' +
+                ", direccion='" + direccion + '\'' +
+                ", superficie=" + superficie +
+                ", tipo=" + tipo +
+                ", cliente=" + cliente.getId() +
+                '}';
     }
 }

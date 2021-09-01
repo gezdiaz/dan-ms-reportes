@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -27,6 +28,7 @@ public class Pedido {
     private Obra obra; //TODO verlo. Creo que debemos ir al servicio de USUARIOS y buscar si existe una obra con este ID, en ese caso, la guardamos en esta BD antes de guardar el Pedido, solo con el proposito de tener la relacion. Otra opcion seria que cada cambio que ocurra en la BD de datos del servicio USUARIOS se refleje en esta BD.
 
     @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_pedido")
     private List<DetallePedido> detalle;
 
     @ManyToOne
@@ -71,5 +73,24 @@ public class Pedido {
 
     public void setEstado(EstadoPedido estado) {
         this.estado = estado;
+    }
+
+    public Double getIngresos() {
+        Double ingresos = 0.0;
+        for (DetallePedido dp: this.detalle){
+            ingresos += dp.getPrecio();
+        }
+        return ingresos;
+    }
+
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "id=" + id +
+                ", fechaPedido=" + fechaPedido +
+                ", obra=" + obra +
+                ", detalle=" + detalle +
+                ", estado=" + estado +
+                '}';
     }
 }
