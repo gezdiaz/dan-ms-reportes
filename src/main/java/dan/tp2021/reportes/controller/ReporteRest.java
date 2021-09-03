@@ -96,6 +96,10 @@ public class ReporteRest {
     @PostMapping("/materiales")
     public ResponseEntity<ReporteMaterial> generarReporteMaterial(@RequestBody ReporteDTO datosReporte){
 
+        if (true) {
+            throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Característica en desarrollo.");
+        }
+
         Instant fechaInicio = datosReporte.fechaInicio.atStartOfDay().toInstant(ZoneOffset.ofTotalSeconds(TimeZone.getDefault().getRawOffset()/1000));
         Instant fechaFin = datosReporte.fechaFin.atTime(23,59,59).toInstant(ZoneOffset.ofTotalSeconds(TimeZone.getDefault().getRawOffset()/1000));
 
@@ -119,6 +123,10 @@ public class ReporteRest {
     @GetMapping("/materiales/{id}")
     public ResponseEntity<ReporteMaterial> getReporteMaterialById(@PathVariable("id") Integer id){
 
+        if (true) {
+            throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Característica en desarrollo.");
+        }
+
         try {
             ReporteMaterial reporteMaterial = reporteMaterialService.getReporteById(id);
             return ResponseEntity.ok(reporteMaterial);
@@ -134,6 +142,10 @@ public class ReporteRest {
     @GetMapping("/materiales")
     public ResponseEntity<List<ReporteMaterial>> getAllReporteMaterial(){
 
+        if (true) {
+            throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Característica en desarrollo.");
+        }
+
         try {
             List<ReporteMaterial> reportesMaterial = reporteMaterialService.getAllReportes();
             return ResponseEntity.ok(reportesMaterial);
@@ -145,6 +157,10 @@ public class ReporteRest {
 
     @PostMapping("/pedidos")
     public ResponseEntity<ReportePedido> generarReportePedidos(@RequestBody ReporteDTO datosReporte){
+
+        if (true) {
+            throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Característica en desarrollo.");
+        }
 
         Instant fechaInicio = datosReporte.fechaInicio.atStartOfDay().toInstant(ZoneOffset.ofTotalSeconds(TimeZone.getDefault().getRawOffset()/1000));
         Instant fechaFin = datosReporte.fechaFin.atTime(23,59,59).toInstant(ZoneOffset.ofTotalSeconds(TimeZone.getDefault().getRawOffset()/1000));
@@ -170,6 +186,10 @@ public class ReporteRest {
     @GetMapping("/pedidos/{id}")
     public ResponseEntity<ReportePedido> getReportePedidoById(@PathVariable("id") Integer id){
 
+        if (true) {
+            throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Característica en desarrollo.");
+        }
+
         try {
             ReportePedido reportePedido = reportePedidoService.getReporteById(id);
             return ResponseEntity.ok(reportePedido);
@@ -184,6 +204,10 @@ public class ReporteRest {
 
     @GetMapping("/pedidos")
     public ResponseEntity<List<ReportePedido>> getAllReportePedido(){
+
+        if (true) {
+            throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Característica en desarrollo.");
+        }
 
         try {
             List<ReportePedido> reportesPedidos = reportePedidoService.getAllReportes();
