@@ -60,4 +60,14 @@ public class DetallePedido {
     public void setMaterial(Material material) {
         this.material = material;
     }
+
+    @Override
+    public String toString() {
+        return "DetallePedido{" +
+                "id=" + id +
+                ", cantidad=" + cantidad +
+                ", precio=" + precio +
+                ", material=" + material +
+                '}';
+    }
 }

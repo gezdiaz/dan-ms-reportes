@@ -1,4 +1,4 @@
-package dan.tp2021.reportes.domain.exceptions;
+package dan.tp2021.reportes.exceptions;
 
 public class ReporteNotFoundException extends Exception{
 

@@ -5,23 +5,22 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import ch.qos.logback.core.net.server.Client;
 import dan.tp2021.reportes.dao.ItemClienteRepository;
 import dan.tp2021.reportes.dao.ReporteClienteRepository;
 import dan.tp2021.reportes.dao.external.ClienteRepository;
 import dan.tp2021.reportes.dao.external.PedidoRepository;
-import dan.tp2021.reportes.domain.exceptions.ReporteNotFoundException;
+import dan.tp2021.reportes.exceptions.ReporteNotFoundException;
 import dan.tp2021.reportes.domain.external.cliente.Cliente;
 import dan.tp2021.reportes.domain.external.cliente.Obra;
 import dan.tp2021.reportes.domain.external.pedido.Pedido;
 import dan.tp2021.reportes.domain.items.ItemCliente;
 import dan.tp2021.reportes.domain.reportes.ReporteCliente;
+import dan.tp2021.reportes.exceptions.SinPedidosException;
 
 @Service
 public class ReporteClienteServiceImpl implements ReporteClienteService {
@@ -30,21 +29,18 @@ public class ReporteClienteServiceImpl implements ReporteClienteService {
 
     private final ReporteClienteRepository reporteClienteRepository;
 
-    private final ItemClienteRepository itemClienteRepository;
-
     private final PedidoRepository pedidoRepository;
 
     private final ClienteRepository clienteRepository;
 
     public ReporteClienteServiceImpl(ReporteClienteRepository reporteClienteRepository, ItemClienteRepository itemClienteRepository, PedidoRepository pedidoRepository, ClienteRepository clienteRepository) {
         this.reporteClienteRepository = reporteClienteRepository;
-        this.itemClienteRepository = itemClienteRepository;
         this.pedidoRepository = pedidoRepository;
         this.clienteRepository = clienteRepository;
     }
 
     @Override
-    public ReporteCliente generarReporte(Instant fechaInicio, Instant fechaFin) throws Exception{
+    public ReporteCliente generarReporte(Instant fechaInicio, Instant fechaFin) throws SinPedidosException, Exception{
 
         logger.debug("generarReporte: Entro a generar reporte de cliente con fechaInicio " + fechaInicio + " y fechaFin " + fechaFin);
 
@@ -74,11 +70,16 @@ public class ReporteClienteServiceImpl implements ReporteClienteService {
         return reporteCliente;
     }
 
-    private List<ItemCliente> getItemsCliente(Instant fechaInicio, Instant fechaFin) {
+    private List<ItemCliente> getItemsCliente(Instant fechaInicio, Instant fechaFin) throws SinPedidosException {
 
         logger.debug("getItemsCliente: Inicio.");
 
         List<Pedido> pedidos = pedidoRepository.findByFechaPedidoBetween(fechaInicio, fechaFin);
+
+        if(pedidos.isEmpty()){
+            //no hay pedidos, no se puede generar el reporte.
+            throw new SinPedidosException("No se encontraron pedidos entre las fechas " + fechaInicio + " y " + fechaFin + " al generar items para un reporte de clientes.");
+        }
 
         logger.debug("getItemsCliente: Todos los pedidos entre las fechas: " + pedidos);
 

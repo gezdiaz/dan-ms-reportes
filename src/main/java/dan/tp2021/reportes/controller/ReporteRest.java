@@ -17,11 +17,12 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.TimeZone;
 
-import dan.tp2021.reportes.domain.exceptions.ReporteNotFoundException;
+import dan.tp2021.reportes.exceptions.ReporteNotFoundException;
 import dan.tp2021.reportes.domain.reportes.ReporteCliente;
 import dan.tp2021.reportes.domain.reportes.ReporteMaterial;
 import dan.tp2021.reportes.domain.reportes.ReportePedido;
 import dan.tp2021.reportes.dto.ReporteDTO;
+import dan.tp2021.reportes.exceptions.SinPedidosException;
 import dan.tp2021.reportes.service.ReporteClienteService;
 import dan.tp2021.reportes.service.ReporteMaterialService;
 import dan.tp2021.reportes.service.ReportePedidoService;
@@ -58,6 +59,9 @@ public class ReporteRest {
         ReporteCliente reporte;
         try {
             reporte = reporteClienteService.generarReporte(fechaInicio, fechaFin);
+        } catch (SinPedidosException spe){
+            logger.warn("generarReporteCliente: No se encontraron pedidos entre las fechas " + fechaInicio + " y " + fechaFin, spe);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, spe.getMessage(), spe);
         } catch (Exception e) {
             logger.error("generarReporteCliente: Se produjo un error al generar un reporte de clientes: " + e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Se produjo un error al generar el reporte: " + e.getMessage(), e);
@@ -158,10 +162,6 @@ public class ReporteRest {
     @PostMapping("/pedidos")
     public ResponseEntity<ReportePedido> generarReportePedidos(@RequestBody ReporteDTO datosReporte){
 
-        if (true) {
-            throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Característica en desarrollo.");
-        }
-
         Instant fechaInicio = datosReporte.fechaInicio.atStartOfDay().toInstant(ZoneOffset.ofTotalSeconds(TimeZone.getDefault().getRawOffset()/1000));
         Instant fechaFin = datosReporte.fechaFin.atTime(23,59,59).toInstant(ZoneOffset.ofTotalSeconds(TimeZone.getDefault().getRawOffset()/1000));
 
@@ -174,8 +174,11 @@ public class ReporteRest {
 
         try {
             reporte = reportePedidoService.generarReporte(fechaInicio, fechaFin);
+        } catch (SinPedidosException spe){
+            logger.warn("generarReportePedidos: No se encontraron pedidos entre las fechas " + fechaInicio + " y " + fechaFin, spe);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, spe.getMessage(), spe);
         } catch (Exception e) {
-            logger.error("generarReporteCliente: Se produjo un error al generar un reporte de pedidos: " + e.getMessage(), e);
+            logger.error("generarReportePedidos: Se produjo un error al generar un reporte de pedidos: " + e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Se produjo un error al generar el reporte: " + e.getMessage(), e);
         }
 
@@ -186,15 +189,11 @@ public class ReporteRest {
     @GetMapping("/pedidos/{id}")
     public ResponseEntity<ReportePedido> getReportePedidoById(@PathVariable("id") Integer id){
 
-        if (true) {
-            throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Característica en desarrollo.");
-        }
-
         try {
             ReportePedido reportePedido = reportePedidoService.getReporteById(id);
             return ResponseEntity.ok(reportePedido);
         } catch (ReporteNotFoundException rnfe){
-            logger.warn("getReporteClienteById: No se encontró el reporte de pedidos con id: " + id + ". Mensaje: " + rnfe.getMessage(), rnfe);
+            logger.warn("getReportePedidoById: No se encontró el reporte de pedidos con id: " + id + ". Mensaje: " + rnfe.getMessage(), rnfe);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "getReportePedidoById: No se encontró el reporte de pedidos con id: " + id + ". Mensaje: " + rnfe.getMessage(), rnfe);
         } catch (Exception e) {
             logger.error("getReportePedidoById: Se produjo un error al obtener el reporte de pedidos con id " + id + ": " + e.getMessage(), e);
@@ -204,10 +203,6 @@ public class ReporteRest {
 
     @GetMapping("/pedidos")
     public ResponseEntity<List<ReportePedido>> getAllReportePedido(){
-
-        if (true) {
-            throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Característica en desarrollo.");
-        }
 
         try {
             List<ReportePedido> reportesPedidos = reportePedidoService.getAllReportes();
