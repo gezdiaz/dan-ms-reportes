@@ -40,7 +40,7 @@ public class ReporteClienteServiceImpl implements ReporteClienteService {
     }
 
     @Override
-    public ReporteCliente generarReporte(Instant fechaInicio, Instant fechaFin) throws SinPedidosException, Exception{
+    public ReporteCliente generarReporte(Instant fechaInicio, Instant fechaFin) throws SinPedidosException{
 
         logger.debug("generarReporte: Entro a generar reporte de cliente con fechaInicio " + fechaInicio + " y fechaFin " + fechaFin);
 
@@ -104,7 +104,7 @@ public class ReporteClienteServiceImpl implements ReporteClienteService {
             }
         }
 
-        logger.debug("getItemsCliente: items despues del primer for: " + itemsClientes);
+        logger.debug("getItemsCliente: items después del primer for: " + itemsClientes);
 
         for (ItemCliente itemCliente : itemsClientes){
             List<Pedido> pedidosCliente = pedidoRepository.findByFechaPedidoBetweenAndClienteId(fechaInicio, fechaFin, itemCliente.getIdCliente());
@@ -131,7 +131,7 @@ public class ReporteClienteServiceImpl implements ReporteClienteService {
         }
 
         //tirar una excepción porque no se encontró el reporte con ese id (404)
-        throw new ReporteNotFoundException("No se encontró el cliente con id " + id);
+        throw new ReporteNotFoundException("No se encontró el reporte de clientes con id " + id);
     }
 
     @Override

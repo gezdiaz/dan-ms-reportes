@@ -33,4 +33,16 @@ public class ReporteMaterial extends Reporte {
     public void setItems(List<ItemMaterial> items) {
         this.items = items;
     }
+
+    @Override
+    public String toString() {
+        return "ReporteMaterial{" +
+                "id=" + id +
+                ", fechaInicio=" + fechaInicio +
+                ", fechaFin=" + fechaFin +
+                ", generado=" + generado +
+                ", gastosTotales=" + gastosTotales +
+                ", items=" + items +
+                '}';
+    }
 }

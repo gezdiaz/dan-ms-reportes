@@ -9,7 +9,7 @@ import dan.tp2021.reportes.exceptions.SinPedidosException;
 
 public interface ReporteClienteService {
 
-    ReporteCliente generarReporte(Instant fechaInicio, Instant fechaFin) throws SinPedidosException, Exception;
+    ReporteCliente generarReporte(Instant fechaInicio, Instant fechaFin) throws SinPedidosException;
 
     ReporteCliente getReporteById(Integer id) throws ReporteNotFoundException;
 

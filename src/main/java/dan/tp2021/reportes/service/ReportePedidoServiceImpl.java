@@ -55,7 +55,7 @@ public class ReportePedidoServiceImpl implements ReportePedidoService{
 
         logger.debug("generarReporte: Reporte generado: " + reporte);
 
-        reportePedidoRepository.save(reporte);
+        reporte = reportePedidoRepository.save(reporte);
 
         logger.debug("generarReporte: Reporte después de guardar: " + reporte);
 
@@ -117,7 +117,7 @@ public class ReportePedidoServiceImpl implements ReportePedidoService{
         }
 
         //tirar una excepción porque no se encontró el reporte con ese id (404)
-        throw new ReporteNotFoundException("No se encontró el cliente con id " + id);
+        throw new ReporteNotFoundException("No se encontró el reporte de pedidos con id " + id);
     }
 
     @Override

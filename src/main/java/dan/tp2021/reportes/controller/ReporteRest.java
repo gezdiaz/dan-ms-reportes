@@ -22,6 +22,7 @@ import dan.tp2021.reportes.domain.reportes.ReporteCliente;
 import dan.tp2021.reportes.domain.reportes.ReporteMaterial;
 import dan.tp2021.reportes.domain.reportes.ReportePedido;
 import dan.tp2021.reportes.dto.ReporteDTO;
+import dan.tp2021.reportes.exceptions.SinMovimientosException;
 import dan.tp2021.reportes.exceptions.SinPedidosException;
 import dan.tp2021.reportes.service.ReporteClienteService;
 import dan.tp2021.reportes.service.ReporteMaterialService;
@@ -100,10 +101,6 @@ public class ReporteRest {
     @PostMapping("/materiales")
     public ResponseEntity<ReporteMaterial> generarReporteMaterial(@RequestBody ReporteDTO datosReporte){
 
-        if (true) {
-            throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Característica en desarrollo.");
-        }
-
         Instant fechaInicio = datosReporte.fechaInicio.atStartOfDay().toInstant(ZoneOffset.ofTotalSeconds(TimeZone.getDefault().getRawOffset()/1000));
         Instant fechaFin = datosReporte.fechaFin.atTime(23,59,59).toInstant(ZoneOffset.ofTotalSeconds(TimeZone.getDefault().getRawOffset()/1000));
 
@@ -116,7 +113,10 @@ public class ReporteRest {
 
         try {
             reporte = reporteMaterialService.generarReporte(fechaInicio, fechaFin);
-        } catch (Exception e) {
+        } catch (SinMovimientosException sme) {
+            logger.warn("generarReporteMaterial: No se encontraron movimientos de stock entre las fechas " + fechaInicio + " y " + fechaFin, sme);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, sme.getMessage(), sme);
+        } catch (Exception e){
             logger.error("generarReporteMaterial: Se produjo un error al generar un reporte de materiales: " + e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Se produjo un error al generar el reporte: " + e.getMessage(), e);
         }
@@ -126,10 +126,6 @@ public class ReporteRest {
 
     @GetMapping("/materiales/{id}")
     public ResponseEntity<ReporteMaterial> getReporteMaterialById(@PathVariable("id") Integer id){
-
-        if (true) {
-            throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Característica en desarrollo.");
-        }
 
         try {
             ReporteMaterial reporteMaterial = reporteMaterialService.getReporteById(id);
@@ -145,10 +141,6 @@ public class ReporteRest {
 
     @GetMapping("/materiales")
     public ResponseEntity<List<ReporteMaterial>> getAllReporteMaterial(){
-
-        if (true) {
-            throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Característica en desarrollo.");
-        }
 
         try {
             List<ReporteMaterial> reportesMaterial = reporteMaterialService.getAllReportes();
@@ -194,7 +186,7 @@ public class ReporteRest {
             return ResponseEntity.ok(reportePedido);
         } catch (ReporteNotFoundException rnfe){
             logger.warn("getReportePedidoById: No se encontró el reporte de pedidos con id: " + id + ". Mensaje: " + rnfe.getMessage(), rnfe);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "getReportePedidoById: No se encontró el reporte de pedidos con id: " + id + ". Mensaje: " + rnfe.getMessage(), rnfe);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontró el reporte de pedidos con id: " + id + ". Mensaje: " + rnfe.getMessage(), rnfe);
         } catch (Exception e) {
             logger.error("getReportePedidoById: Se produjo un error al obtener el reporte de pedidos con id " + id + ": " + e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Se produjo un error al obtener el reporte: " + e.getMessage(), e);
